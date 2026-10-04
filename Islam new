@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NurAI - อิสลามิกกุญแจความรู้ & เวลาละหมาด</title>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --primary: #047857;
+            --primary-dark: #065f46;
+            --primary-light: #10b981;
+            --bg-light: #f0fdf4;
+            --accent-gold: #d97706;
+            --card-bg: #ffffff;
+            --text-dark: #0f172a;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Prompt', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Top Header Navigation */
+        header {
+            background: linear-gradient(135deg, #064e3b 0%, #047857 100%);
+            color: white;
+            padding: 1.2rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+        }
+
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .brand-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.4rem;
+            font-weight: 700;
+        }
+
+        .brand-logo i {
+            color: #fbbf24;
+            font-size: 1.8rem;
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.12);
+            padding: 6px;
+            border-radius: 30px;
+            backdrop-filter: blur(5px);
+        }
+
+        .tab-btn {
+            background: transparent;
+            border: none;
+            color: rgba(255, 255, 255, 0.9);
+            padding: 8px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: all 0.25s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .tab-btn.active, .tab-btn:hover {
+            background: white;
+            color: var(--primary-dark);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        /* Main Container */
+        main {
+            max-width: 1200px;
+            width: 100%;
+            margin: 30px auto;
+            padding: 0 20px;
+            flex: 1;
+        }
+
+        .tab-pane {
+            display: none;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .tab-pane.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Section 1: Prayer Times Banner */
+        .hero-banner {
+            background: linear-gradient(135deg, #047857 0%, #0d9488 100%);
+            color: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: var(--shadow);
+            margin-bottom: 25px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+
+        .location-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .city-dropdown {
+            padding: 8px 16px;
+            border-radius: 10px;
+            border: none;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--primary-dark);
+            background: white;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .gps-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            color: white;
+            padding: 8px 14px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: background 0.2s;
+        }
+
+        .gps-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .countdown-box {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 14px;
+            padding: 15px 20px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .countdown-timer {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #fef08a;
+        }
+
+        .prayer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+        }
+
+        .prayer-card {
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 14px;
+            padding: 18px;
+            text-align: center;
+            transition: transform 0.2s, background 0.2s;
+        }
+
+        .prayer-card.next-up {
+            background: white;
+            color: var(--primary-dark);
+            transform: scale(1.04);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+        }
+
+        .prayer-card h4 {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            margin-bottom: 6px;
+        }
+
+        .prayer-card .time {
+            font-size: 1.4rem;
+            font-weight: 700;
+        }
+
+        .prayer-card.next-up h4 { opacity: 1; color: var(--text-muted); }
+        .prayer-card.next-up .time { color: var(--primary); }
+
+        /* Section 2: Quran Reader */
+        .quran-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .search-box {
+            position: relative;
+            flex: 1;
+            min-width: 280px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 12px 18px 12px 45px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            font-size: 1rem;
+            outline: none;
+            background: white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+        }
+
+        .quran-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 18px;
+        }
+
+        .surah-card {
+            background: var(--card-bg);
+            border-radius: 14px;
+            padding: 18px;
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            border: 1px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .surah-card:hover {
+            border-color: var(--primary-light);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 20px -5px rgba(16, 185, 129, 0.15);
+        }
+
+        .surah-badge {
+            width: 42px;
+            height: 42px;
+            background: var(--bg-light);
+            color: var(--primary-dark);
+            font-weight: 700;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.95rem;
+        }
+
+        .surah-meta {
+            flex: 1;
+            margin-left: 15px;
+        }
+
+        .surah-meta h3 {
+            font-size: 1.05rem;
+            color: var(--text-dark);
+        }
+
+        .surah-meta p {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .surah-arabic-title {
+            font-family: 'Amiri', serif;
+            font-size: 1.5rem;
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+        /* Modal for Reading Surah Verses */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal-card {
+            background: white;
+            width: 100%;
+            max-width: 850px;
+            max-height: 85vh;
+            border-radius: 20px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            animation: modalUp 0.3s ease-out;
+        }
+
+        @keyframes modalUp {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .modal-header {
+            padding: 20px 25px;
+            background: var(--bg-light);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-body {
+            padding: 25px;
+            overflow-y: auto;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .ayah-box {
+            padding: 20px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .ayah-arabic {
+            font-family: 'Amiri', serif;
+            font-size: 1.8rem;
+            line-height: 2.2;
+            text-align: right;
+            color: var(--primary-dark);
+            direction: rtl;
+        }
+
+        .ayah-translation {
+            font-size: 1rem;
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        .audio-player-bar {
+            background: #f8fafc;
+            padding: 15px 25px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+        }
+
+        /* Section 3: AI Assistant & Knowledge Base */
+        .ai-layout {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+
+        .chat-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            height: 600px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .chat-top {
+            padding: 16px 20px;
+            background: #ecfdf5;
+            border-bottom: 1px solid #d1fae5;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .quick-chips {
+            padding: 12px 20px;
+            background: #f8fafc;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+
+        .chip {
+            background: white;
+            border: 1px solid var(--border);
+            padding: 6px 14px;
+            border-radius: 16px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            color: var(--primary-dark);
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .chip:hover {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .msg-bubble {
+            max-width: 82%;
+            padding: 14px 18px;
+            border-radius: 16px;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            position: relative;
+        }
+
+        .msg-bubble.bot {
+            background: #f1f5f9;
+            color: var(--text-dark);
+            align-self: flex-start;
+            border-bottom-left-radius: 4px;
+        }
+
+        .msg-bubble.user {
+            background: var(--primary);
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 4px;
+        }
+
+        .chat-input-bar {
+            padding: 15px 20px;
+            background: white;
+            border-top: 1px solid var(--border);
+            display: flex;
+            gap: 10px;
+        }
+
+        .chat-input-bar input {
+            flex: 1;
+            padding: 12px 20px;
+            border-radius: 25px;
+            border: 1px solid var(--border);
+            outline: none;
+            font-size: 0.95rem;
+        }
+
+        .send-btn-icon {
+            background: var(--primary);
+            color: white;
+            border: none;
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            transition: background 0.2s;
+        }
+
+        .send-btn-icon:hover {
+            background: var(--primary-dark);
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 20px;
+            background: #064e3b;
+            color: #a7f3d0;
+            font-size: 0.85rem;
+            margin-top: auto;
+        }
+
+        @media (max-width: 768px) {
+            header { padding: 1rem; }
+            .header-container { flex-direction: column; align-items: stretch; }
+            .nav-tabs { justify-content: space-around; width: 100%; }
+            .hero-header { flex-direction: column; align-items: flex-start; }
+            .prayer-grid { grid-template-columns: repeat(2, 1fr); }
+            .msg-bubble { max-width: 92%; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Navigation -->
+    <header>
+        <div class="header-container">
+            <div class="brand-logo">
+                <i class="fa-solid fa-kaaba"></i>
+                <span>NurAI - ศูนย์รวมความรู้ศาสนาอิสลาม</span>
+            </div>
+            <nav class="nav-tabs">
+                <button class="tab-btn active" id="btn-tab-prayer"><i class="fa-solid fa-clock"></i> เวลาละหมาด</button>
+                <button class="tab-btn" id="btn-tab-quran"><i class="fa-solid fa-book-quran"></i> อัลกุรอาน (114 บท)</button>
+                <button class="tab-btn" id="btn-tab-ai"><i class="fa-solid fa-robot"></i> ถาม-ตอบ AI</button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main>
+
+        <!-- TAB 1: เวลาละหมาด -->
+        <div id="pane-prayer" class="tab-pane active">
+            <div class="hero-banner">
+                <div class="hero-header">
+                    <div>
+                        <h2><i class="fa-solid fa-location-dot"></i> ตารางเวลาละหมาดประจำวัน</h2>
+                        <p id="hijri-date" style="opacity: 0.9; margin-top: 4px; font-size: 0.95rem;">กำลังโหลดวันที่ฮิจเราะฮ์...</p>
+                    </div>
+                    <div class="location-controls">
+                        <select id="city-select" class="city-dropdown">
+                            <option value="Bangkok">กรุงเทพมหานคร</option>
+                            <option value="Narathiwat" selected>นราธิวาส</option>
+                            <option value="Yala">ยะลา</option>
+                            <option value="Pattani">ปัตตานี</option>
+                            <option value="Songkhla">สงขลา</option>
+                            <option value="Phuket">ภูเก็ต</option>
+                            <option value="Chiang Mai">เชียงใหม่</option>
+                        </select>
+                        <button id="btn-gps" class="gps-btn"><i class="fa-solid fa-crosshairs"></i> ตำแหน่งปัจจุบัน</button>
+                    </div>
+                </div>
+
+                <!-- Live Countdown -->
+                <div class="countdown-box">
+                    <div>
+                        <span style="font-size: 0.9rem; opacity: 0.9;">เวลาละหมาดถัดไป: </span>
+                        <strong id="next-prayer-name" style="font-size: 1.1rem; color: #fef08a;">--</strong>
+                    </div>
+                    <div class="countdown-timer" id="countdown-text">--:--:--</div>
+                </div>
+
+                <!-- Prayer Cards -->
+                <div class="prayer-grid">
+                    <div class="prayer-card" id="card-fajr">
+                        <h4>ซุบฮิ (Fajr)</h4>
+                        <div class="time" id="time-fajr">--:--</div>
+                    </div>
+                    <div class="prayer-card" id="card-sunrise">
+                        <h4>ชูรูก (Sunrise)</h4>
+                        <div class="time" id="time-sunrise">--:--</div>
+                    </div>
+                    <div class="prayer-card" id="card-dhuhr">
+                        <h4>ดุฮ์ริ (Dhuhr)</h4>
+                        <div class="time" id="time-dhuhr">--:--</div>
+                    </div>
+                    <div class="prayer-card" id="card-asr">
+                        <h4>อัศริ (Asr)</h4>
+                        <div class="time" id="time-asr">--:--</div>
+                    </div>
+                    <div class="prayer-card" id="card-maghrib">
+                        <h4>มัฆริบ (Maghrib)</h4>
+                        <div class="time" id="time-maghrib">--:--</div>
+                    </div>
+                    <div class="prayer-card" id="card-isha">
+                        <h4>อิชาอ์ (Isha)</h4>
+                        <div class="time" id="time-isha">--:--</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 2: อัลกุรอาน 114 ซูเราะฮ์ -->
+        <div id="pane-quran" class="tab-pane">
+            <div class="quran-header">
+                <h2><i class="fa-solid fa-book-open-reader" style="color: var(--primary);"></i> อัลกุรอานทั้งหมด 114 ซูเราะฮ์</h2>
+                <div class="search-box">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" id="quran-search" placeholder="ค้นหาชื่อซูเราะฮ์ ภาษาไทย/อังกฤษ หรือลำดับตัวเลข...">
+                </div>
+            </div>
+
+            <div class="quran-grid" id="quran-grid">
+                <p style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--text-muted);">กำลังโหลดรายชื่ออัลกุรอาน...</p>
+            </div>
+        </div>
+
+        <!-- TAB 3: ผู้ช่วย AI ถาม-ตอบ -->
+        <div id="pane-ai" class="tab-pane">
+            <div class="ai-layout">
+                <div class="chat-card">
+                    <div class="c
